@@ -13,7 +13,9 @@ export interface NTPMeasurement {
 
 export const _sendNTPRequest = (ws: WebSocket, currentRTT?: number) => {
   if (ws.readyState !== WebSocket.OPEN) {
-    throw new Error("Cannot send NTP request: WebSocket is not open");
+    // Don't throw - just silently skip if socket is not ready
+    console.debug("Skipping NTP request: WebSocket is not open");
+    return;
   }
 
   const t0 = epochNow();

@@ -1,0 +1,39 @@
+# Render Blueprint - Deploy both client and server
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend Server (Bun + Hono + WebSocket)
+  - type: web
+    name: mesh-speaker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: S3_BUCKET_NAME
+        sync: false
+      - key: S3_PUBLIC_URL
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+    healthCheckPath: /health
+
+  # Frontend Client (Next.js)
+  - type: web
+    name: mesh-listener
+    runtime: node
+    plan: free
+    buildCommand: cd apps/client && bun install && bun run build
+    startCommand: cd apps/client && bun run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: beatsync-server
+          property: host
+      - key: NEXT_PUBLIC_WS_URL
+        sync: false # Set manually: wss://beatsync-server.onrender.com/ws

@@ -52,6 +52,9 @@ const server = Bun.serve<WSData, undefined>({
         case "/discover":
           return handleDiscover(req);
 
+        case "/health":
+          return new Response("OK", { status: 200, headers: corsHeaders });
+
         default:
           return errorResponse("Not found", 404);
       }
