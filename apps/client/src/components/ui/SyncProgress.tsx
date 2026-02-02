@@ -17,7 +17,7 @@ interface SyncProgressProps {
 const OuterModal = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
-      className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-neutral-950 backdrop-blur-sm"
+      className="fixed inset-0 flex flex-col items-center justify-center z-50 mesh-gradient backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -91,7 +91,7 @@ export const SyncProgress = ({
     return (
       <OuterModal>
         <motion.div
-          className="flex flex-col items-center justify-center p-6 bg-neutral-900 rounded-md border border-neutral-800 shadow-lg"
+          className="flex flex-col items-center justify-center p-6 glass rounded-xl shadow-lg"
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -143,7 +143,7 @@ export const SyncProgress = ({
 
           <motion.a
             href="/"
-            className="mt-4 px-5 py-2 bg-primary text-primary-foreground rounded-full font-medium text-xs tracking-wide cursor-pointer w-full hover:shadow-lg hover:shadow-zinc-50/50 transition-shadow duration-500 text-center"
+            className="mt-4 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium text-sm tracking-wide cursor-pointer w-full hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileHover={{
@@ -173,7 +173,7 @@ export const SyncProgress = ({
     return (
       <OuterModal>
         <motion.div
-          className="flex flex-col items-center justify-center p-6 bg-neutral-900 rounded-md border border-neutral-800 shadow-lg"
+          className="flex flex-col items-center justify-center p-6 glass rounded-xl shadow-lg"
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -271,7 +271,7 @@ export const SyncProgress = ({
     return (
       <OuterModal>
         <motion.div
-          className="flex flex-col items-center justify-center p-6 bg-neutral-900 rounded-md border border-neutral-800 shadow-lg"
+          className="flex flex-col items-center justify-center p-6 glass rounded-xl shadow-lg"
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -322,7 +322,7 @@ export const SyncProgress = ({
           </motion.p>
 
           <motion.button
-            className="mt-4 px-5 py-2 bg-primary text-primary-foreground rounded-full font-medium text-xs tracking-wide cursor-pointer w-full hover:shadow-lg hover:shadow-zinc-50/50 transition-shadow duration-500"
+            className="mt-4 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium text-sm tracking-wide cursor-pointer w-full hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileHover={{
@@ -351,7 +351,7 @@ export const SyncProgress = ({
   return (
     <OuterModal>
       <motion.div
-        className="flex flex-col items-center justify-center p-6 bg-neutral-900 rounded-md border border-neutral-800 shadow-lg"
+        className="flex flex-col items-center justify-center p-6 glass rounded-xl shadow-lg"
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
@@ -429,7 +429,7 @@ export const SyncProgress = ({
         {/* Progress bar */}
         <div className="w-full h-[4px] bg-neutral-800 rounded-full overflow-hidden mt-4 mb-2">
           <motion.div
-            className="h-full bg-neutral-300"
+            className="h-full bg-gradient-to-r from-blue-400 to-blue-500"
             initial={{ width: "0%" }}
             animate={{ width: `${normalizedProgress * 100}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}

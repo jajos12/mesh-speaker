@@ -79,7 +79,7 @@ export const RoomQRCode = () => {
             {/* Domain and Room Code Display */}
             <div className="w-full text-center space-y-2">
               <div className="text-3xl font-semibold text-white">
-                beatsync.gg
+                mesh-listener.onreder.com
               </div>
 
               <div className="text-3xl font-bold text-white bg-neutral-800/50 border border-neutral-700/50 rounded-lg px-8 py-2 inline-block">
@@ -133,7 +133,7 @@ export const RoomQRCode = () => {
                       transition={{ duration: 0.1, ease: "easeOut" }}
                       className="absolute inset-0 flex items-center justify-center"
                     >
-                      <Check size={16} className="text-green-500" />
+                      <Check size={16} className="text-blue-400" />
                     </motion.div>
                   ) : (
                     <motion.div

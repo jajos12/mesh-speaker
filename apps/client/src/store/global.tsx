@@ -18,6 +18,7 @@ import {
   GRID,
   LoadAudioSourceType,
   NTP_CONSTANTS,
+  SYNC_CONSTANTS,
   PlaybackControlsPermissionsEnum,
   PlaybackControlsPermissionsType,
   PositionType,
@@ -119,6 +120,9 @@ interface GlobalStateValues {
     currentAttempt: number;
     maxAttempts: number;
   };
+
+  // Sync retry state
+  resyncRetryCount: number;
 
   // Playback controls
   playbackControlsPermissions: PlaybackControlsPermissionsType;
@@ -263,6 +267,9 @@ const initialState: GlobalStateValues = {
     currentAttempt: 0,
     maxAttempts: 0,
   },
+
+  // Sync retry state
+  resyncRetryCount: 0,
 
   // Playback controls
   playbackControlsPermissions: PlaybackControlsPermissionsEnum.enum.EVERYONE,
@@ -657,24 +664,54 @@ export const useGlobalStore = create<GlobalState>((set, get) => {
 
       // Check if the scheduled time has already passed (with 50ms tolerance)
       if (waitTimeSeconds < 0.05) {
-        console.warn(
-          `Scheduled playback time has passed or is too close. Requesting resync...`
+        const currentRetryCount = state.resyncRetryCount;
+
+        // Check if we've exceeded max retries
+        if (currentRetryCount >= SYNC_CONSTANTS.MAX_RESYNC_RETRIES) {
+          console.warn(
+            `Max resync retries (${SYNC_CONSTANTS.MAX_RESYNC_RETRIES}) exceeded. Showing error to user.`
+          );
+
+          // Reset retry count and show user feedback
+          set({ resyncRetryCount: 0 });
+          toast.info("Experiencing some network delays...", {
+            id: "lateSchedule",
+            duration: 2000,
+          });
+          return;
+        }
+
+        // Increment retry count
+        set({ resyncRetryCount: currentRetryCount + 1 });
+
+        // Calculate delay with exponential backoff + jitter
+        const baseDelay = SYNC_CONSTANTS.RETRY_BASE_DELAY_MS;
+        const exponentialDelay = baseDelay * Math.pow(2, currentRetryCount);
+        const jitter = Math.random() * 100; // 0-100ms jitter to prevent thundering herd
+        const retryDelay = exponentialDelay + jitter;
+
+        console.log(
+          `Scheduled playback time passed. Retry ${currentRetryCount + 1}/${SYNC_CONSTANTS.MAX_RESYNC_RETRIES} in ${retryDelay.toFixed(0)}ms...`
         );
 
-        // Don't play - request a fresh sync instead
+        // Request resync after delay
         const { socket } = getSocket(state);
-        sendWSRequest({
-          ws: socket,
-          request: { type: ClientActionEnum.enum.SYNC },
-        });
-
-        // Show user feedback
-        toast.info("Experiencing some network delays...", {
-          id: "lateSchedule",
-          duration: 2000,
-        });
+        setTimeout(() => {
+          if (socket.readyState === WebSocket.OPEN) {
+            sendWSRequest({
+              ws: socket,
+              request: { type: ClientActionEnum.enum.SYNC },
+            });
+          }
+        }, retryDelay);
 
         return; // Exit without playing
+      }
+
+      // Successful scheduling - reset retry count
+      if (state.resyncRetryCount > 0) {
+        console.log("Sync successful after retries, resetting retry count");
+        set({ resyncRetryCount: 0 });
       }
 
       console.log(
@@ -964,7 +1001,7 @@ export const useGlobalStore = create<GlobalState>((set, get) => {
         sourceNode.onended = null;
         sourceNode.disconnect();
         sourceNode.stop();
-      } catch (_) {}
+      } catch (_) { }
 
       const startTime = audioContext.currentTime + data.when;
       const audioIndex = data.audioIndex ?? 0;
@@ -1331,14 +1368,14 @@ export const useGlobalStore = create<GlobalState>((set, get) => {
 
       // Build completely new queue based on sources order
       const newQueue: string[] = [];
-      
+
       // Add current/selected track first (highest priority)
       if (currentAudioSource && sources.some(s => s.url === currentAudioSource)) {
         newQueue.push(currentAudioSource);
       } else if (state.selectedAudioUrl && sources.some(s => s.url === state.selectedAudioUrl)) {
         newQueue.push(state.selectedAudioUrl);
       }
-      
+
       // Add remaining tracks in playlist order
       sources.forEach(source => {
         if (!newQueue.includes(source.url)) {

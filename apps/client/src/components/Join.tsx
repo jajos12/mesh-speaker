@@ -91,11 +91,19 @@ export const Join = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      className="min-h-screen mesh-gradient relative overflow-hidden"
     >
+      {/* Floating gradient orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float-slow" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl animate-float-slower" />
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-cyan-500/6 rounded-full blur-3xl animate-float-slow" />
+      </div>
+
       <AnnouncementBanner />
-      <div className="w-full px-2.5 lg:px-1 max-w-[28rem] mx-auto mt-20 lg:mt-24">
+      <div className="w-full px-2.5 lg:px-1 max-w-[28rem] mx-auto mt-20 lg:mt-24 relative z-10">
         <motion.div
-          className="flex flex-col items-center justify-center p-6 bg-neutral-900 rounded-lg border border-neutral-800 shadow-xl mx-auto"
+          className="flex flex-col items-center justify-center p-8 glass rounded-2xl shadow-2xl mx-auto"
           initial={{ opacity: 0, y: 10, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -108,31 +116,31 @@ export const Join = () => {
               transition={{ duration: 0.4, delay: 0.1 }}
             >
               <motion.div className="relative flex items-center justify-center">
-                <motion.div className="size-2 bg-green-500 rounded-full" />
-                <motion.div className="absolute size-2.5 bg-green-500/30 rounded-full animate-ping" />
+                <motion.div className="size-2 bg-blue-400 rounded-full" />
+                <motion.div className="absolute size-2.5 bg-blue-400/30 rounded-full animate-ping" />
               </motion.div>
-              <span className="text-xs text-neutral-500 ml-0.5">
+              <span className="text-xs text-neutral-400 ml-0.5">
                 {numActiveUsers} {numActiveUsers === 1 ? "person" : "people"}{" "}
                 listening now
               </span>
             </motion.div>
           ) : null}
           <motion.h2
-            className="text-base font-medium tracking-tight mb-1 text-white"
+            className="text-xl font-semibold tracking-tight mb-2 text-white"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.13 }}
           >
-            Join a Beatsync Room
+            Join a Room
           </motion.h2>
 
           <motion.p
-            className="text-neutral-400 mb-5 text-center text-xs"
+            className="text-neutral-500 mb-6 text-center text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.15 }}
           >
-            Enter a room code to join or create a new room
+            Enter a room code or create a new session
           </motion.p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -173,13 +181,13 @@ export const Join = () => {
                     }}
                     className="gap-2"
                   >
-                    <InputOTPGroup className="gap-2">
+                    <InputOTPGroup className="gap-3">
                       {Array.from({ length: 6 }).map((_, index) => (
                         <InputOTPSlot
                           key={index}
                           index={index}
-                          className="w-9 h-10 text-base bg-neutral-800/80 border-neutral-700 transition-all duration-200 
-                          focus-within:border-primary/70 focus-within:bg-neutral-800 focus-within:ring-1 focus-within:ring-primary/30"
+                          className="w-10 h-12 text-lg font-medium bg-white/5 border-white/10 rounded-lg transition-all duration-200 
+                          focus-within:border-blue-500/70 focus-within:bg-white/10 focus-within:ring-2 focus-within:ring-blue-500/20"
                         />
                       ))}
                     </InputOTPGroup>
@@ -240,34 +248,35 @@ export const Join = () => {
               </Button>
             </motion.div>
 
-            <div className="flex flex-col gap-3 mt-5">
+            <div className="flex flex-col gap-3 mt-6">
               <motion.button
                 type="button"
-                className="px-5 py-2 bg-primary text-primary-foreground rounded-full font-medium text-sm tracking-wide cursor-pointer w-full hover:shadow-lg hover:shadow-zinc-50/50 transition-shadow duration-500 flex items-center justify-center"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold text-sm tracking-wide cursor-pointer w-full hover:from-blue-600 hover:to-blue-700 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 flex items-center justify-center glow-blue-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 whileHover={{
-                  scale: 1.015,
+                  scale: 1.02,
                 }}
-                whileTap={{ scale: 0.985 }}
-                transition={{ duration: 0.3 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
                 onClick={handleCreateRoom}
                 disabled={isJoining || isCreating}
               >
                 {isCreating ? (
                   <motion.div
+                    animate={{ rotate: 360 }}
                     transition={{
                       repeat: Infinity,
                       duration: 1,
                       ease: "linear",
                     }}
                   >
-                    <PlusCircle size={16} className="mr-2" />
+                    <PlusCircle size={18} className="mr-2" />
                   </motion.div>
                 ) : (
-                  <PlusCircle size={16} className="mr-2" />
+                  <PlusCircle size={18} className="mr-2" />
                 )}
-                <span>{isCreating ? "Creating..." : "Create new room"}</span>
+                <span>{isCreating ? "Creating..." : "Create New Room"}</span>
               </motion.button>
 
               {/* <motion.button

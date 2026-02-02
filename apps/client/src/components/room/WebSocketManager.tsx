@@ -1,6 +1,7 @@
 "use client";
 import { useClientId } from "@/hooks/useClientId";
 import { useNtpHeartbeat } from "@/hooks/useNtpHeartbeat";
+import { useSyncMonitor } from "@/hooks/useSyncMonitor";
 import { useWebSocketReconnection } from "@/hooks/useWebSocketReconnection";
 import { getUserLocation } from "@/lib/ip";
 import { useChatStore } from "@/store/chat";
@@ -92,7 +93,7 @@ export const WebSocketManager = ({
     (state) => state.handleLoadAudioSource
   );
 
-  // Use the NTP heartbeat hook
+  // Use the NTP heartbeat hook with network degradation callback
   const { startHeartbeat, stopHeartbeat, markNTPResponseReceived } =
     useNtpHeartbeat({
       onConnectionStale: () => {
@@ -101,7 +102,17 @@ export const WebSocketManager = ({
           currentSocket.close();
         }
       },
+      onNetworkDegraded: () => {
+        console.log("Network degradation callback triggered");
+      },
     });
+
+  // Use the sync monitor hook for drift detection
+  useSyncMonitor({
+    onDriftDetected: (driftMs) => {
+      console.log(`Drift callback: ${driftMs.toFixed(0)}ms detected`);
+    },
+  });
 
   // Use the WebSocket reconnection hook
   const {
@@ -119,10 +130,10 @@ export const WebSocketManager = ({
     // Clear previous connection if it exists
     if (socket) {
       console.log("Clearing previous connection");
-      socket.onclose = () => {};
-      socket.onerror = () => {};
-      socket.onmessage = () => {};
-      socket.onopen = () => {};
+      socket.onclose = () => { };
+      socket.onerror = () => { };
+      socket.onmessage = () => { };
+      socket.onopen = () => { };
       socket.close();
     }
 

@@ -36,7 +36,7 @@ export const SocketStatus = () => {
   const statusColors = {
     disconnected: "bg-red-500",
     connecting: "bg-yellow-500",
-    connected: "bg-green-500",
+    connected: "bg-blue-400",
     closing: "bg-orange-500",
     unknown: "bg-gray-500",
   };

@@ -16,7 +16,7 @@ export const TimingDisplay: React.FC<TimingDisplayProps> = ({
 }) => {
   // Calculate colors based on offset values
   const getOffsetColor = (offset: number) => {
-    if (Math.abs(offset) < 1) return "bg-green-500"; // Very close - green
+    if (Math.abs(offset) < 1) return "bg-blue-400"; // Very close - green
     if (offset > 0) return "bg-red-500"; // Ahead - red
     return "bg-blue-500"; // Behind - blue
   };
@@ -29,7 +29,7 @@ export const TimingDisplay: React.FC<TimingDisplayProps> = ({
       case 0:
         return "bg-red-500"; // 0-2 seconds: Red
       case 1:
-        return "bg-green-500"; // 2-4 seconds: Green
+        return "bg-blue-400"; // 2-4 seconds: Green
       case 2:
         return "bg-blue-500"; // 4-6 seconds: Blue
       default:
@@ -45,7 +45,7 @@ export const TimingDisplay: React.FC<TimingDisplayProps> = ({
       case 0:
         return "text-red-500"; // 0-2 seconds: Red
       case 1:
-        return "text-green-500"; // 2-4 seconds: Green
+        return "text-blue-400"; // 2-4 seconds: Green
       case 2:
         return "text-blue-500"; // 4-6 seconds: Blue
       default:
@@ -124,13 +124,12 @@ export const TimingDisplay: React.FC<TimingDisplayProps> = ({
         <div className="w-full bg-gray-200 rounded-full h-2 flex items-center">
           <div className="w-1/2 h-full bg-gray-300 rounded-l-full"></div>
           <div
-            className={`h-4 w-1 ${
-              Math.abs(totalNudge) < 0.1
+            className={`h-4 w-1 ${Math.abs(totalNudge) < 0.1
                 ? "bg-green-600"
                 : totalNudge > 0
-                ? "bg-red-500"
-                : "bg-blue-500"
-            }`}
+                  ? "bg-red-500"
+                  : "bg-blue-500"
+              }`}
             style={{ marginLeft: `${50 + totalNudge * 10}%` }} // Scale for visibility
           ></div>
           <div className="w-1/2 h-full bg-gray-300 rounded-r-full"></div>
@@ -153,9 +152,8 @@ export const TimingDisplay: React.FC<TimingDisplayProps> = ({
             <div
               className={`h-4 w-1 ${getOffsetColor(clockOffset)}`}
               style={{
-                marginLeft: `${
-                  50 + Math.min(Math.max(clockOffset * 5, -49), 49)
-                }%`,
+                marginLeft: `${50 + Math.min(Math.max(clockOffset * 5, -49), 49)
+                  }%`,
               }} // Scale and clamp
             ></div>
             <div className="w-1/2 h-full bg-gray-300 rounded-r-full"></div>

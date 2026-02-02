@@ -198,7 +198,7 @@ export function InlineSearch() {
                         stroke="currentColor"
                         strokeWidth="8"
                         strokeLinecap="round"
-                        className="text-green-500"
+                        className="text-blue-400"
                         strokeDasharray={2 * Math.PI * 35 * 0.25}
                         animate={{
                           rotate: [0, 360],
@@ -214,7 +214,7 @@ export function InlineSearch() {
                       />
                     </svg>
                   </div>
-                  <span className="text-xs font-mono text-green-400 font-medium">
+                  <span className="text-xs font-mono text-blue-400 font-medium">
                     {activeStreamJobs}
                   </span>
                 </motion.div>
@@ -227,7 +227,7 @@ export function InlineSearch() {
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="w-5 h-5 flex items-center justify-center"
                 >
-                  <ArrowDown className="w-full h-full text-green-500" />
+                  <ArrowDown className="w-full h-full text-blue-400" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -265,7 +265,7 @@ export function InlineSearch() {
               "w-full h-10 pr-24 sm:pr-20 border border-neutral-600/30 rounded-lg text-base sm:text-sm font-normal transition-all duration-200 focus:outline-none truncate",
               activeStreamJobs > 0 ? "pl-14" : "pl-10",
               canMutate
-                ? "bg-white/10 hover:bg-white/15 focus:bg-white/15 focus:ring-2 focus:ring-white/80 text-white placeholder:text-neutral-400"
+                ? "bg-white/10 hover:bg-white/15 focus:bg-white/15 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder:text-neutral-400"
                 : "bg-neutral-800/50 text-neutral-500 placeholder:text-neutral-600 cursor-not-allowed"
             )}
           />
@@ -280,7 +280,7 @@ export function InlineSearch() {
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="flex items-center justify-center"
                 >
-                  <ArrowDown className="w-5 h-5 text-green-500" />
+                  <ArrowDown className="w-5 h-5 text-blue-400" />
                 </motion.div>
               ) : (
                 <motion.div

@@ -125,8 +125,10 @@
 
 /* Dynamic viewport height class */
 .h-dvh {
-  height: 100vh; /* Fallback for older browsers */
-  height: 100dvh; /* Modern browsers auto-adjust for browser chrome */
+  height: 100vh;
+  /* Fallback for older browsers */
+  height: 100dvh;
+  /* Modern browsers auto-adjust for browser chrome */
 }
 
 /* Safe area padding utilities */
@@ -138,10 +140,84 @@
   padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
 }
 
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-darker {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 40px rgba(59, 130, 246, 0.15),
+    0 0 60px rgba(59, 130, 246, 0.05);
+}
+
+.glow-blue-sm {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.25),
+    0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Gradient mesh background */
+.mesh-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 40% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, oklch(10% 0.02 260) 0%, oklch(8% 0.015 260) 100%);
+}
+
+/* Animated gradient orbs */
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+@keyframes float-slower {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-40px, 30px) scale(1.1);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 25s ease-in-out infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -149,19 +225,24 @@
 
 @theme {
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+
   @keyframes caret-blink {
     0% {
       opacity: 1;
     }
+
     70% {
       opacity: 1;
     }
+
     100% {
       opacity: 1;
     }
+
     20% {
       opacity: 0;
     }
+
     50% {
       opacity: 0;
     }
@@ -169,33 +250,40 @@
 
   /* Sound wave animations */
   @keyframes sound-wave-1 {
+
     0%,
     100% {
       height: 40%;
     }
+
     50% {
       height: 70%;
     }
   }
 
   @keyframes sound-wave-2 {
+
     0%,
     100% {
       height: 80%;
     }
+
     50% {
       height: 40%;
     }
   }
 
   @keyframes sound-wave-3 {
+
     0%,
     100% {
       height: 60%;
     }
+
     33% {
       height: 80%;
     }
+
     66% {
       height: 30%;
     }
@@ -204,16 +292,20 @@
 
 @theme inline {
   --font-inter: var(--font-inter);
-  /* https://kyrylo.org/css/2025/02/09/oklch-css-variables-for-tailwind-v4-colors.html */
-  --color-primary-50: oklch(98.19% 0.0181 155.83);
-  --color-primary-100: oklch(96.24% 0.0434 156.74);
-  --color-primary-200: oklch(92.5% 0.0806 155.99);
-  --color-primary-300: oklch(87.12% 0.1363 154.45);
-  --color-primary-400: oklch(80.03% 0.1821 151.71);
-  --color-primary-500: oklch(72.27% 0.192 149.58);
-  --color-primary-600: oklch(62.71% 0.1699 149.21);
-  --color-primary-700: oklch(52.73% 0.1371 150.07);
-  --color-primary-800: oklch(44.79% 0.1083 151.33);
-  --color-primary-900: oklch(39.25% 0.0896 152.54);
-  --color-primary-950: oklch(26.64% 0.0628 152.93);
+  /* Blue color palette - vibrant electric blue */
+  --color-primary-50: oklch(97% 0.02 240);
+  --color-primary-100: oklch(94% 0.04 240);
+  --color-primary-200: oklch(88% 0.08 240);
+  --color-primary-300: oklch(78% 0.14 240);
+  --color-primary-400: oklch(68% 0.18 240);
+  --color-primary-500: oklch(58% 0.20 240);
+  --color-primary-600: oklch(50% 0.18 240);
+  --color-primary-700: oklch(42% 0.15 240);
+  --color-primary-800: oklch(35% 0.12 240);
+  --color-primary-900: oklch(28% 0.09 240);
+  --color-primary-950: oklch(18% 0.06 240);
+
+  /* Accent color - cyan/teal for highlights */
+  --color-accent-400: oklch(75% 0.15 195);
+  --color-accent-500: oklch(65% 0.17 195);
 }

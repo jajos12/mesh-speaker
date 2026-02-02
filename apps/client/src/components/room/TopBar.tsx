@@ -26,11 +26,11 @@ export const TopBar = ({ roomId }: TopBarProps) => {
   // Show minimal nav bar when synced and not loading
   if (!isLoadingAudio && isSynced) {
     return (
-      <div className="h-8 bg-black/80 backdrop-blur-md z-50 flex items-center justify-between px-4 border-b border-zinc-800">
+      <div className="h-8 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-between px-4 border-b border-white/5">
         <div className="flex items-center space-x-4 text-xs text-neutral-400 py-2 md:py-0">
           {isAdmin && (
             <div className="flex items-center">
-              <Crown className="h-3 w-3 text-green-500" fill="currentColor" />
+              <Crown className="h-3 w-3 text-blue-400" fill="currentColor" />
             </div>
           )}
           <Link
@@ -64,17 +64,15 @@ export const TopBar = ({ roomId }: TopBarProps) => {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                className="text-green-500"
-                strokeDasharray={`${
-                  (ntpMeasurements.length / MAX_NTP_MEASUREMENTS) * 31.4
-                } 31.4`}
+                className="text-blue-400"
+                strokeDasharray={`${(ntpMeasurements.length / MAX_NTP_MEASUREMENTS) * 31.4
+                  } 31.4`}
                 strokeLinecap="round"
                 transform="rotate(-90 7 7)"
                 initial={{ strokeDasharray: "0 31.4" }}
                 animate={{
-                  strokeDasharray: `${
-                    (ntpMeasurements.length / MAX_NTP_MEASUREMENTS) * 31.4
-                  } 31.4`,
+                  strokeDasharray: `${(ntpMeasurements.length / MAX_NTP_MEASUREMENTS) * 31.4
+                    } 31.4`,
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               />

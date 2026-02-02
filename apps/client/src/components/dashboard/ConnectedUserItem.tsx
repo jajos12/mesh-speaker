@@ -78,8 +78,7 @@ export const ConnectedUserItem = memo<ConnectedUserItemProps>(
             className="object-cover w-full h-full"
           />
           <AvatarFallback
-            className={isCurrentUser ? "bg-primary-600" : "bg-neutral-600"}
-          >
+            className={isCurrentUser ? "bg-blue-600" : "bg-neutral-600"}   >
             {client.username
               .split("-")
               .map((part) => part[0])
@@ -104,7 +103,7 @@ export const ConnectedUserItem = memo<ConnectedUserItemProps>(
       <motion.div
         className={cn(
           "flex items-center gap-2 p-1.5 rounded-md transition-all duration-300 text-sm",
-          isCurrentUser ? "bg-primary-400/10" : "bg-transparent"
+          isCurrentUser ? "bg-blue-500/10" : "bg-transparent"
         )}
         initial={{ opacity: 0.8 }}
         animate={{
@@ -156,7 +155,7 @@ export const ConnectedUserItem = memo<ConnectedUserItemProps>(
           variant={isCurrentUser ? "default" : "outline"}
           className={cn(
             "ml-auto text-xs shrink-0 min-w-[60px] text-center py-0 h-5",
-            isCurrentUser ? "bg-primary-600 text-primary-50" : ""
+            isCurrentUser ? "bg-blue-600 text-white" : ""
           )}
         >
           {isCurrentUser ? "You" : "Connected"}
@@ -187,7 +186,7 @@ export const ConnectedUserItem = memo<ConnectedUserItemProps>(
                   onClick={() => onSetAdmin(client.clientId, true)}
                   className="text-xs"
                 >
-                  <Crown className="h-3 w-3 mr-2 text-green-500" />
+                  <Crown className="h-3 w-3 mr-2 text-blue-400" />
                   Make Admin
                 </DropdownMenuItem>
               )}

@@ -17,3 +17,17 @@ export const NTP_CONSTANTS = {
 export const CHAT_CONSTANTS = {
   MAX_MESSAGE_LENGTH: 20_000,
 } as const;
+
+// Sync Enhancement Constants
+export const SYNC_CONSTANTS = {
+  // How often to check for drift during playback (ms)
+  DRIFT_CHECK_INTERVAL_MS: 10_000,
+  // Maximum acceptable drift before triggering auto-resync (ms)
+  MAX_ACCEPTABLE_DRIFT_MS: 100,
+  // RTT spike threshold - if current RTT > average * this, network is degraded
+  RTT_SPIKE_THRESHOLD: 2.0,
+  // Maximum retry attempts for late scheduling before showing error
+  MAX_RESYNC_RETRIES: 3,
+  // Base delay for exponential backoff retry (ms)
+  RETRY_BASE_DELAY_MS: 500,
+} as const;

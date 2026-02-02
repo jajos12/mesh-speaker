@@ -1,17 +1,66 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGlobalStore, MAX_NTP_MEASUREMENTS } from "@/store/global";
-import { NTP_CONSTANTS } from "@beatsync/shared";
+import { NTP_CONSTANTS, SYNC_CONSTANTS, ClientActionEnum } from "@beatsync/shared";
+import { sendWSRequest } from "@/utils/ws";
 
 interface UseNtpHeartbeatProps {
   onConnectionStale?: () => void;
+  onNetworkDegraded?: () => void;
 }
 
 export const useNtpHeartbeat = ({
   onConnectionStale,
+  onNetworkDegraded,
 }: UseNtpHeartbeatProps) => {
   const ntpTimerRef = useRef<number | null>(null);
   const lastNtpRequestTime = useRef<number | null>(null);
+  const rttHistoryRef = useRef<number[]>([]);
+  const [isNetworkDegraded, setIsNetworkDegraded] = useState(false);
+
   const sendNTPRequest = useGlobalStore((state) => state.sendNTPRequest);
+  const roundTripEstimate = useGlobalStore((state) => state.roundTripEstimate);
+  const socket = useGlobalStore((state) => state.socket);
+
+  /**
+   * Check if network quality has degraded based on RTT spike
+   */
+  const checkNetworkQuality = useCallback(() => {
+    const currentRTT = roundTripEstimate;
+    if (currentRTT <= 0) return;
+
+    // Add to history (keep last 10 measurements)
+    rttHistoryRef.current.push(currentRTT);
+    if (rttHistoryRef.current.length > 10) {
+      rttHistoryRef.current.shift();
+    }
+
+    // Need at least 5 measurements to detect spikes
+    if (rttHistoryRef.current.length < 5) return;
+
+    // Calculate average RTT (excluding current)
+    const historicalRTTs = rttHistoryRef.current.slice(0, -1);
+    const avgRTT = historicalRTTs.reduce((a, b) => a + b, 0) / historicalRTTs.length;
+
+    // Detect spike: current RTT > threshold * average
+    const isSpike = currentRTT > avgRTT * SYNC_CONSTANTS.RTT_SPIKE_THRESHOLD;
+
+    if (isSpike && !isNetworkDegraded) {
+      console.warn(`📶 Network degradation detected: RTT ${currentRTT.toFixed(0)}ms > ${(avgRTT * SYNC_CONSTANTS.RTT_SPIKE_THRESHOLD).toFixed(0)}ms threshold`);
+      setIsNetworkDegraded(true);
+      onNetworkDegraded?.();
+
+      // Request resync due to network change
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        sendWSRequest({
+          ws: socket,
+          request: { type: ClientActionEnum.enum.SYNC },
+        });
+      }
+    } else if (!isSpike && isNetworkDegraded) {
+      console.log("📶 Network quality recovered");
+      setIsNetworkDegraded(false);
+    }
+  }, [roundTripEstimate, isNetworkDegraded, onNetworkDegraded, socket]);
 
   // Schedule next NTP request
   const scheduleNextNtpRequest = useCallback(() => {
@@ -32,7 +81,7 @@ export const useNtpHeartbeat = ({
       if (
         lastNtpRequestTime.current &&
         Date.now() - lastNtpRequestTime.current >
-          NTP_CONSTANTS.RESPONSE_TIMEOUT_MS
+        NTP_CONSTANTS.RESPONSE_TIMEOUT_MS
       ) {
         console.error("NTP request timed out - connection may be stale");
         // Notify parent component that connection is stale
@@ -49,6 +98,8 @@ export const useNtpHeartbeat = ({
 
   // Start the heartbeat when socket opens
   const startHeartbeat = useCallback(() => {
+    rttHistoryRef.current = []; // Reset RTT history
+    setIsNetworkDegraded(false);
     scheduleNextNtpRequest();
   }, [scheduleNextNtpRequest]);
 
@@ -59,12 +110,14 @@ export const useNtpHeartbeat = ({
       ntpTimerRef.current = null;
     }
     lastNtpRequestTime.current = null;
+    rttHistoryRef.current = [];
   }, []);
 
-  // Mark that we received an NTP response
+  // Mark that we received an NTP response and check network quality
   const markNTPResponseReceived = useCallback(() => {
     lastNtpRequestTime.current = null;
-  }, []);
+    checkNetworkQuality();
+  }, [checkNetworkQuality]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -77,5 +130,6 @@ export const useNtpHeartbeat = ({
     startHeartbeat,
     stopHeartbeat,
     markNTPResponseReceived,
+    isNetworkDegraded,
   };
 };
